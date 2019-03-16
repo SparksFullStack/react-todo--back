@@ -1,6 +1,5 @@
 // this router handles all things related to creating accounts and authentication
 // * TODO
-// create user route
 // sign in route
 // sign out route
 // forgot password route
@@ -21,8 +20,12 @@ router.post('/register', (req, res) => {
     const { _id } = newUser;
     
     newUser.save(err => {
-        if (err) return res.status(500).json({ registerError: "There was an error when trying to register you, please try again"});
+        if (err) return res.status(500).json({ registerError: "There was an error when trying to register the user" });
         
+        JWT.sign({ username, password, securityQuestionAnswer, _id }, JWT_SECRET, { expiresIn: "6hr", algorithm: 'HS256'}, (err, token) => {
+            if (err) return res.status(500).json({ registerError: "There was an error when trying to generate a JWT for the user" });
+            else res.status(200).json({ JWT: token });
+        })
     })
 })
 
