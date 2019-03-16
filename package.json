@@ -1,0 +1,23 @@
+{
+  "name": "react-todo--back",
+  "version": "1.0.0",
+  "description": "The server-side of my to-do list application.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SparksFullStack/react-todo--back.git"
+  },
+  "author": "Charlie Sparks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SparksFullStack/react-todo--back/issues"
+  },
+  "homepage": "https://github.com/SparksFullStack/react-todo--back#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
