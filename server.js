@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 const authRouter = require('./routers/authRouter');
@@ -17,10 +18,12 @@ mongoose.connection
     .on('error', (err) => console.warn(err));
 
 server.use(express.json());
+server.use(cors());
 
 server.get('/', (req, res) => {
     res.send('server is live!');
 });
+
 
 server.use('/auth', authRouter);
 
