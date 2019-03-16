@@ -1,12 +1,17 @@
 const express = require('express');
-
+const mongoose = require('mongoose');
 
 const server = express();
 const port = process.env.PORT || 3001;
 
+mongoose.promise = global.Promise;
+const databaseOptions = { useNewUrlParser: true };
+mongoose.set('useCreateIndex', true);
+
+server.use(express.json());
+
 server.get('/', (req, res) => {
-    res.send('hellow from down below!');
+    res.send('server is live!');
 });
 
-server.get('/test', (req, res) => console.log('idk my bff jill'))
 server.listen(port, () => console.log(`The server is listening on port ${port}`));
