@@ -1,8 +1,4 @@
 // this router handles all things related to creating accounts and authentication
-// * TODO
-// sign in route
-// sign out route
-// forgot password route
 
 const express = require('express');
 const bcrypt = require('bcryptjs');
@@ -62,8 +58,9 @@ router.post('/forgot_pass', (req, res) => {
 
 router.put('/reset_pass', (req, res) => {
     const credentials = req.body;
+    const newPassword = bcrypt.hashSync(credentials.password, 10);
 
-    UserModel.findOneAndUpdate({ email: credentials.email }, { password: credentials.password }, {}, (err, record) => {
+    UserModel.findOneAndUpdate({ email: credentials.email }, { password: newPassword }, {}, (err, record) => {
         if (err) return res.status(400).json({ resetPassError: "There was an error resetting the password, please try again" });
         else {
             const { email, password, securityQuestionAnswer } = record;
