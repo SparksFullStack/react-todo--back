@@ -54,10 +54,26 @@ router.post('/forgot_pass', (req, res) => {
             if (!userRecord) return res.status(404).json({ lookupError: 'No user with that email address was found' })
 
             if (bcrypt.compareSync(credentials.securityQuestionAnswer, userRecord.securityQuestionAnswer)) {
-                return res.status(200).json({ resetPassword: true });
-            } else return  res.status(400).json({ forgotPassError: "There was an error reseting the password, please try again" });
+                return res.status(200).json({ forgotPass: true });
+            } else return  res.status(400).json({ forgotPassError: "There was an error checking the password, please try again" });
         });
 });
+
+
+router.put('/reset_pass', (req, res) => {
+    const credentials = req.body;
+
+    UserModel.findOneAndUpdate({ email: credentials.email }, { password: credentials.password }, {}, (err, record) => {
+        if (err) return res.status(400).json({ resetPassError: "There was an error resetting the password, please try again" });
+        else {
+            const { email, password, securityQuestionAnswer } = record;
+            JWT.sign({ email, password, securityQuestionAnswer }, JWT_SECRET, { expiresIn: "6hr", algorithm: 'HS256' }, (err, decoded) => {
+                if (err) return res.status(500).json({ loginError: "There was an error trying to generate a JWT for the user" });
+                else return res.status(200).json({ JWT: decoded, resetPass: true });
+            })
+        }
+    })
+})
 
 
 
