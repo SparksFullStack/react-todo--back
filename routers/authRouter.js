@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
 
     UserModel.findOne({ email: credentials.email })
         .then(userRecord => {
-            if (!userRecord) return res.status(404).json('No user with that email was found');
+            if (!userRecord) return res.status(404).json({ loginError: 'No user with that email was found' });
 
             const { email, password, securityQuestionAnswer } = userRecord;
             if (bcrypt.compareSync(credentials.password, password)) {
@@ -45,6 +45,21 @@ router.post('/login', (req, res) => {
             } else res.status(401).json({ loginError: "The password provided didn't match the user record, please try again" });
         });
 });
+
+router.post('/forgot_pass', (req, res) => {
+    const credentials = req.body;
+
+    UserModel.findOne({ email: credentials.email })
+        .then(userRecord => {
+            if (!userRecord) return res.status(404).json({ lookupError: 'No user with that email address was found' })
+
+            if (bcrypt.compareSync(credentials.securityQuestionAnswer, userRecord.securityQuestionAnswer)) {
+                return res.status(200).json({ resetPassword: true });
+            } else return  res.status(400).json({ forgotPassError: "There was an error reseting the password, please try again" });
+        });
+});
+
+
 
 
 module.exports = router;
